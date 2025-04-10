@@ -146,15 +146,12 @@ caminho_pasta_saida = '/content/drive/MyDrive/arquivosFormatados'
 os.makedirs(caminho_pasta_saida, exist_ok=True)
 
 # Função para enviar o arquivo para a IA e processar a resposta
-def processar_pdf(caminho_arquivo_entrada, caminho_arquivo_saida):
+def processar_pdf(caminho_arquivo_entrada):
     # Extrai o nome do arquivo sem a extensão
     nome_arquivo = os.path.splitext(os.path.basename(caminho_arquivo_entrada))[0]
-
-    # Nome do arquivo de saída (mesmo nome do arquivo de entrada, mas com extensão .txt)
-    nome_arquivo_saida = nome_arquivo + '.txt'
-
+  
     # Caminho completo do arquivo de saída
-    caminho_arquivo_saida = os.path.join(caminho_pasta_saida, nome_arquivo_saida)
+    caminho_arquivo_saida = os.path.join(caminho_pasta_saida, nome_arquivo + '.txt')
 
     arquivo = [
         upload_to_gemini(caminho_arquivo_entrada, mime_type="application/pdf")
@@ -185,39 +182,3 @@ for nome_arquivo in os.listdir(caminho_pasta_entrada):
     if nome_arquivo.endswith('.pdf'):
         caminho_arquivo_entrada = os.path.join(caminho_pasta_entrada, nome_arquivo)
         processar_pdf(caminho_arquivo_entrada, caminho_pasta_saida)
-
-# Caminho do arquivo de entrada no Google Drive
-caminho_arquivo_entrada = '/content/drive/MyDrive/arquivosTCC/Adaptações de acessibilidade para a comunidade surda em instalações artísticas e científicas.pdf'
-
-# Extrai o nome do arquivo sem a extensão
-nome_arquivo = os.path.splitext(os.path.basename(caminho_arquivo_entrada))[0]
-
-# Caminho para a pasta de saída no Google Drive
-caminho_pasta_saida = '/content/drive/MyDrive/arquivosFormatados/'
-
-# Nome do arquivo de saída (mesmo nome do arquivo de entrada, mas com extensão .txt)
-nome_arquivo_saida = nome_arquivo + '.txt'
-
-# Caminho completo do arquivo de saída
-caminho_arquivo_saida = os.path.join(caminho_pasta_saida, nome_arquivo_saida)
-
-arquivo=[
-    upload_to_gemini(caminho_arquivo_entrada, mime_type="application/pdf")
-    ]
-response = chat_session.send_message(arquivo[0])
-
-texto = response.text
-
-# Remove a primeira e a última linha
-linhas = texto.splitlines()  # Divide o texto em linhas
-if len(linhas) >= 2:  # Verifica se há pelo menos duas linhas
-    linhas = linhas[1:-1]  # Remove a primeira e a última linha
-texto_formatado = '\n'.join(linhas)  # Junta as linhas restantes
-
-print(response.text)
-
-# Salvar o conteúdo no arquivo de saída
-with open(caminho_arquivo_saida, 'w') as arquivo:
-    arquivo.write(texto_formatado)
-
-print(f"Arquivo salvo em: {caminho_arquivo_saida}")
