@@ -181,4 +181,4 @@ def processar_pdf(caminho_arquivo_entrada):
 for nome_arquivo in os.listdir(caminho_pasta_entrada):
     if nome_arquivo.endswith('.pdf'):
         caminho_arquivo_entrada = os.path.join(caminho_pasta_entrada, nome_arquivo)
-        processar_pdf(caminho_arquivo_entrada, caminho_pasta_saida)
+        processar_pdf(caminho_arquivo_entrada)
